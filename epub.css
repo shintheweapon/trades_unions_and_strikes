@@ -1,0 +1,20 @@
+body {
+  margin: 5%;
+  text-align: justify;
+  line-height: 1.4;
+}
+
+h1, h2, h3 {
+  text-align: center;
+}
+
+blockquote {
+  margin: 1em 2em;
+  font-size: 0.9em;
+}
+
+.small-caps {
+  font-variant: small-caps;
+}
+
+sup { font-size: 0.75em; }
