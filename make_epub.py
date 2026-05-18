@@ -71,6 +71,13 @@ def fix_enumerate_labels(tex):
     return tex.replace(old, new)
 
 
+def fix_advertisement(tex):
+    tex = re.sub(r'[ \t]*\\thispagestyle\{[^}]*\}[ \t]*\n?', '', tex)
+    tex = re.sub(r'[ \t]*\\addcontentsline\{[^}]*\}\{[^}]*\}\{[^}]*\}[ \t]*\n?', '', tex)
+    tex = re.sub(r'\\scalebox\{[^}]*\}\{\\ding\{[^}]*\}\}', lambda m: '☞', tex)
+    return tex
+
+
 def replace_ornaments(tex):
     repl = lambda m: ORNAMENT
     tex = re.sub(r'\\sectionlinetwo\{[^}]*\}\{[^}]*\}', repl, tex)
@@ -85,6 +92,7 @@ def main():
     body = strip_titlepage(body)
     body = strip_toc_commands(body)
     body = inline_includes(body)
+    body = fix_advertisement(body)
     body = number_chapters(body)
     body = fix_enumerate_labels(body)
     body = replace_ornaments(body)
