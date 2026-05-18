@@ -9,10 +9,43 @@ Produces _epub_input.tex by:
 """
 
 import re
+import subprocess
+import zipfile
 from pathlib import Path
 
 BASE = Path(__file__).parent
 ORNAMENT = '\n\\hrulefill\n'
+EPUB_OUT = BASE / 'trades_unions_and_strikes.epub'
+TITLE_PAGE_ENTRY = 'EPUB/text/title_page.xhtml'
+
+CUSTOM_TITLE_PAGE = """\
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <title>Trades&#x2019; Unions and Strikes: Their Philosophy and Intention</title>
+  <link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css" />
+</head>
+<body epub:type="frontmatter">
+<section epub:type="titlepage" class="titlepage tp-page">
+  <p class="tp-title">TRADES&#x2019; UNIONS AND STRIKES</p>
+  <p class="tp-subtitle">Their Philosophy and Intention</p>
+  <hr class="tp-rule"/>
+  <p class="tp-by">BY</p>
+  <p class="tp-author">T. J. Dunning</p>
+  <p class="tp-role">Secretary to the London Consolidated Society of Bookbinders</p>
+  <hr class="tp-rule"/>
+  <p class="tp-epigraph">&#x201C;United to support, but not combined to injure.&#x201D;</p>
+  <hr class="tp-rule"/>
+  <p class="tp-publisher">LONDON</p>
+  <p class="tp-publisher-detail">Published by the Author, and sold by M. Harley,<br/>No. 5, Raquet Court, Fleet Street. E.C.</p>
+  <p class="tp-year">1860.</p>
+  <p class="tp-price"><em>Price One Shilling.</em></p>
+</section>
+</body>
+</html>
+"""
 
 
 def read(name):
@@ -85,6 +118,36 @@ def replace_ornaments(tex):
     return tex
 
 
+def run_pandoc():
+    cmd = [
+        'pandoc', str(BASE / '_epub_input.tex'),
+        '--from', 'latex', '--to', 'epub3',
+        '--output', str(EPUB_OUT),
+        "--metadata=title:Trades' Unions and Strikes: Their Philosophy and Intention",
+        '--metadata=author:T. J. Dunning',
+        '--metadata=date:1860',
+        '--metadata=lang:en-GB',
+        '--css', str(BASE / 'epub.css'),
+        '--epub-chapter-level=1',
+        '--toc', '--toc-depth=2',
+    ]
+    subprocess.run(cmd, check=True)
+    print(f'Pandoc generated {EPUB_OUT}')
+
+
+def patch_epub_title_page():
+    tmp = EPUB_OUT.with_suffix('.tmp')
+    with zipfile.ZipFile(EPUB_OUT, 'r') as zin:
+        with zipfile.ZipFile(tmp, 'w', compression=zipfile.ZIP_DEFLATED) as zout:
+            for item in zin.infolist():
+                data = (CUSTOM_TITLE_PAGE.encode('utf-8')
+                        if item.filename == TITLE_PAGE_ENTRY
+                        else zin.read(item.filename))
+                zout.writestr(item, data)
+    tmp.replace(EPUB_OUT)
+    print(f'Patched title page in {EPUB_OUT}')
+
+
 def main():
     main_tex = read('trades_unions_and_strikes.tex')
 
@@ -100,6 +163,8 @@ def main():
     out = BASE / '_epub_input.tex'
     out.write_text(body.strip() + '\n', encoding='utf-8')
     print(f'Written {out}')
+    run_pandoc()
+    patch_epub_title_page()
 
 
 if __name__ == '__main__':

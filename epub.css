@@ -18,3 +18,17 @@ blockquote {
 }
 
 sup { font-size: 0.75em; }
+
+/* Title page */
+.tp-page { text-align: center; padding: 8% 0; }
+.tp-title { text-align: center; font-size: 1.6em; font-weight: bold; letter-spacing: 0.05em; margin-bottom: 0.3em; }
+.tp-subtitle { text-align: center; font-size: 1.1em; margin-bottom: 1.5em; }
+.tp-rule { display: block; width: 40%; margin: 1em auto; }
+.tp-by { text-align: center; font-size: 0.85em; margin-bottom: 0.3em; }
+.tp-author { text-align: center; font-size: 1.2em; margin-bottom: 0.4em; }
+.tp-role { text-align: center; font-size: 0.8em; margin-bottom: 1.5em; }
+.tp-epigraph { text-align: center; font-size: 0.95em; margin: 0.5em 2em; }
+.tp-publisher { text-align: center; font-size: 0.85em; margin-top: 1.5em; margin-bottom: 0.2em; }
+.tp-publisher-detail { text-align: center; font-size: 0.8em; margin-bottom: 0.5em; }
+.tp-year { text-align: center; font-size: 0.85em; }
+.tp-price { text-align: center; font-size: 0.85em; }
