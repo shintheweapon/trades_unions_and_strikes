@@ -42,6 +42,35 @@ def inline_includes(tex):
     return re.sub(r'\\include\{(\w+)\}', sub, tex)
 
 
+ROMAN = ['I', 'II', 'III', 'IV', 'V']
+
+
+def number_chapters(tex):
+    counter = iter(ROMAN)
+    def repl(m):
+        title = m.group(1).lstrip('-').lstrip()
+        return f'\\chapter{{{next(counter)}. {title}}}'
+    return re.sub(r'\\chapter\{(---[^}]*)\}', repl, tex)
+
+
+def fix_enumerate_labels(tex):
+    old = (
+        '    \\begin{enumerate}[label=\\Roman*., leftmargin=2.9cm]\n'
+        '        \\item---Wages, and what determines their value.\n'
+        '        \\item---Trade Societies, for the protection of wages.\n'
+        '        \\item---The means used by them for that purpose.\n'
+        '    \\end{enumerate}'
+    )
+    new = (
+        '    \\begin{enumerate}\n'
+        '        \\item[I.]---Wages, and what determines their value.\n'
+        '        \\item[II.]---Trade Societies, for the protection of wages.\n'
+        '        \\item[III.]---The means used by them for that purpose.\n'
+        '    \\end{enumerate}'
+    )
+    return tex.replace(old, new)
+
+
 def replace_ornaments(tex):
     repl = lambda m: ORNAMENT
     tex = re.sub(r'\\sectionlinetwo\{[^}]*\}\{[^}]*\}', repl, tex)
@@ -56,6 +85,8 @@ def main():
     body = strip_titlepage(body)
     body = strip_toc_commands(body)
     body = inline_includes(body)
+    body = number_chapters(body)
+    body = fix_enumerate_labels(body)
     body = replace_ornaments(body)
 
     out = BASE / '_epub_input.tex'
