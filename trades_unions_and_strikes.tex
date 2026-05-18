@@ -9,8 +9,9 @@
 \usepackage{setspace}
 \usepackage{etoolbox}
 \usepackage[object=vectorian]{pgfornament}
+\usepackage{pifont}
 \usepackage{fontspec}
-\setmainfont{Sabon LT Std}
+\setmainfont[Scale=1.2]{Sabon LT Std}
 \setstretch{1.25}
 
 % 裝飾團案
@@ -80,17 +81,33 @@
 
 \begin{document}
 
-     \maketitle
-
-    \begin{center}
-        {\LARGE TRADES' UNIONS AND STRIKES}
-
-        \vspace{2em}
-
-        \sectionlinetwo{black}{88}
-    \end{center}
-
+\begin{titlepage}
+    \centering
+    % \vspace*{4cm}
+    {\LARGE\bfseries TRADES' UNIONS AND STRIKES}\\[0.8em]
+    {\large Their Philosophy and Intention}\\[2.5em]
+    \sectionlinetwo{black}{88}
     \vspace{2em}
+    {\small BY}\\[1em]
+    {\large T. J. Dunning}\\[0.8em]
+    {\small SECRETARY TO THE LONDON CONSOLIDATED SOCIETY OF BOOKBINDERS}\\[1em]
+    \vspace{3em}
+    \rule{4cm}{0.4pt}\\[1em]
+    {\normalsize ``United to support, but not combined to injure."}\\[0.5em]
+    \rule{4cm}{0.4pt}\\[1em]
+    \vspace{1cm}
+    {\normalsize LONDON:}\\
+    {\normalsize PUBLISHED BY THE AUTHOR, AND SOLD BY M. HARLEY, No. 5, RAQUET COURT, FLEET STREET. E.C.}\\
+    \rule{2cm}{0.4pt}\\
+    {\normalsize 1860.}\\
+    {\emph{PRICE ONE SHILLING.}}
+    \vfill
+\end{titlepage}
+
+\include{advertisement}
+
+    \tableofcontents
+    \clearpage
 
     {\noindent \textsc{The} object of this pamphlet is to obtain a
     hearing on the subject of ``Trades' Unions'' and ``Strikes'' from
